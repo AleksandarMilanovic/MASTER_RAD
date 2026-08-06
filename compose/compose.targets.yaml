@@ -1,0 +1,72 @@
+services:
+  linux-target-01:
+    build:
+      context: ../targets/linux/linux-target-01
+      dockerfile: Dockerfile
+      args:
+        WAZUH_VERSION: 4.14.6-1
+
+    image: hcr/linux-target:4.14.6
+    container_name: hcr-linux-target-01
+    hostname: linux-target-01
+
+    profiles:
+      - targets
+
+    environment:
+      WAZUH_MANAGER: 10.10.20.10
+      WAZUH_AGENT_NAME: linux-target-01
+      WAZUH_AGENT_GROUP: linux-servers
+
+    restart: unless-stopped
+
+    init: false
+
+    networks:
+      management:
+        ipv4_address: 10.10.10.100
+      security:
+        ipv4_address: 10.10.20.100
+
+    volumes:
+      - linux_target_agent_key:/var/ossec/etc/persistent
+      - linux_target_data:/lab-data
+
+    healthcheck:
+      test:
+        - CMD
+        - /usr/local/bin/hcr-healthcheck
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+
+    security_opt:
+      - no-new-privileges:true
+
+    cap_drop:
+      - ALL
+
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - KILL
+      - SETGID
+      - SETUID
+
+networks:
+  management:
+    external: true
+    name: hcr-management
+
+  security:
+    external: true
+    name: hcr-security
+
+volumes:
+  linux_target_agent_key:
+    name: hcr-linux-target-01-agent-key
+
+  linux_target_data:
+    name: hcr-linux-target-01-data

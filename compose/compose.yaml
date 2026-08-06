@@ -1,0 +1,92 @@
+name: ${COMPOSE_PROJECT_NAME:-hybrid-cyber-range}
+
+services:
+  network-probe:
+    image: alpine:3.22
+    container_name: hcr-network-probe
+    profiles: ["core"]
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Hybrid Cyber Range network probe started"
+        ip address
+        sleep infinity
+    restart: unless-stopped
+    networks:
+      management:
+        ipv4_address: 10.10.10.10
+      security:
+        ipv4_address: 10.10.20.10
+      monitoring:
+        ipv4_address: 10.10.30.10
+      corporate:
+        ipv4_address: 10.10.40.10
+      dmz:
+        ipv4_address: 10.10.50.10
+      attacker:
+        ipv4_address: 10.10.60.10
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /etc/alpine-release"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+networks:
+  management:
+    name: hcr-management
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${MGMT_SUBNET:-10.10.10.0/24}
+          gateway: ${MGMT_GATEWAY:-10.10.10.1}
+
+  security:
+    name: hcr-security
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: ${SECURITY_SUBNET:-10.10.20.0/24}
+          gateway: ${SECURITY_GATEWAY:-10.10.20.1}
+
+  monitoring:
+    name: hcr-monitoring
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: ${MONITORING_SUBNET:-10.10.30.0/24}
+          gateway: ${MONITORING_GATEWAY:-10.10.30.1}
+
+  corporate:
+    name: hcr-corporate
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: ${CORPORATE_SUBNET:-10.10.40.0/24}
+          gateway: ${CORPORATE_GATEWAY:-10.10.40.1}
+
+  dmz:
+    name: hcr-dmz
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: ${DMZ_SUBNET:-10.10.50.0/24}
+          gateway: ${DMZ_GATEWAY:-10.10.50.1}
+
+  attacker:
+    name: hcr-attacker
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: ${ATTACKER_SUBNET:-10.10.60.0/24}
+          gateway: ${ATTACKER_GATEWAY:-10.10.60.1}

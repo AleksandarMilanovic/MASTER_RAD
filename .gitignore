@@ -1,0 +1,122 @@
+# ============================================
+# Secrets and local environment
+# ============================================
+
+.env
+.env.*
+!.env.example
+
+*.secret
+*.token
+*.credentials
+
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+
+**/*-key.pem
+**/*.key
+**/root-ca.key
+
+secrets/
+certificates/
+
+# ============================================
+# Wazuh
+# ============================================
+
+security-platform/wazuh/config/wazuh_indexer_ssl_certs/*
+!security-platform/wazuh/config/wazuh_indexer_ssl_certs/.gitkeep
+
+**/client.keys
+**/authd.pass
+**/queue/
+**/logs/
+**/archives/
+**/alerts/
+
+# ============================================
+# CALDERA
+# ============================================
+
+security-platform/caldera/.venv/
+security-platform/caldera/conf/local.yml
+security-platform/caldera/plugins/magma/node_modules/
+security-platform/caldera/plugins/magma/dist/
+security-platform/caldera/data/
+security-platform/caldera/downloads/
+security-platform/caldera/logs/
+security-platform/caldera/*.db
+
+# ============================================
+# Python
+# ============================================
+
+.venv/
+__pycache__/
+**/__pycache__/
+
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+
+# ============================================
+# Node.js
+# ============================================
+
+**/node_modules/
+npm-debug.log*
+
+# ============================================
+# Docker / Runtime
+# ============================================
+
+data/
+volumes/
+docker-data/
+backups/
+
+**/*.pid
+**/*.sock
+
+# ============================================
+# Results & telemetry
+# ============================================
+
+results/raw/*
+!results/raw/.gitkeep
+
+results/screenshots/*
+!results/screenshots/.gitkeep
+
+*.pcap
+*.pcapng
+*.evtx
+*.log
+
+# ============================================
+# VMware
+# ============================================
+
+*.vmdk
+*.vmx
+*.vmxf
+*.nvram
+*.vmsd
+*.vmsn
+*.vmem
+*.lck
+*.ova
+*.ovf
+
+# ============================================
+# Operating systems & editors
+# ============================================
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db

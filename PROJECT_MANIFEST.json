@@ -1,0 +1,33 @@
+{
+  "project": "hybrid-cyber-range",
+  "phase": "0",
+  "generated_on": "2026-07-22",
+  "files": [
+    ".env.example",
+    ".gitignore",
+    "Makefile",
+    "README.md",
+    "compose/compose.attack.yaml",
+    "compose/compose.monitoring.yaml",
+    "compose/compose.security.yaml",
+    "compose/compose.targets.yaml",
+    "compose/compose.yaml",
+    "documentation/00-project-management/implementation-log.md",
+    "documentation/01-requirements/system-requirements.md",
+    "documentation/02-architecture/architecture-decisions/ADR-001-hybrid-architecture.md",
+    "documentation/02-architecture/architecture-decisions/ADR-002-compose-orchestration.md",
+    "documentation/02-architecture/architecture-decisions/ADR-003-network-segmentation.md",
+    "documentation/02-architecture/system-overview.md",
+    "documentation/03-deployment/component-template.md",
+    "network/addressing/ip-plan.md",
+    "results/processed/.gitkeep",
+    "results/raw/.gitkeep",
+    "results/reports/.gitkeep",
+    "results/screenshots/.gitkeep",
+    "scripts/deploy/phase0-up.sh",
+    "scripts/reset/phase0-down.sh",
+    "scripts/validate/check-prerequisites.sh",
+    "scripts/validate/validate-compose.sh",
+    "tests/infrastructure/phase0-test-plan.md"
+  ]
+}
