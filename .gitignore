@@ -120,3 +120,12 @@ results/screenshots/*
 
 .DS_Store
 Thumbs.db
+
+# ============================================
+# The Hive 5
+# ============================================
+
+security-platform/thehive-vendor/
+
+secrets/
+**/*api-key*

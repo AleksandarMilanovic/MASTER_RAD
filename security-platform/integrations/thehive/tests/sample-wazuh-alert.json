@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-08-08T23:06:49.355147+00:00",
+  "rule": {
+    "level": 10,
+    "description": "HCR Wazuh to TheHive integration validation",
+    "id": "100200",
+    "groups": [
+      "hcr",
+      "integration_test"
+    ]
+  },
+  "agent": {
+    "id": "001",
+    "name": "WIN-TARGET-01",
+    "ip": "192.168.100.133"
+  },
+  "location": "Security"
+}

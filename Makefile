@@ -3,6 +3,15 @@ COMPOSE := docker compose -f compose/compose.yaml
 
 .PHONY: help validate config up-core down ps logs
 
+.PHONY: thehive-integration
+thehive-integration:
+	./scripts/deploy/configure-thehive-integration.sh
+
+
+.PHONY: validate-thehive-integration
+validate-thehive-integration:
+	./scripts/validate/validate-thehive-integration.sh
+
 help:
 	@echo "Dostupne komande:"
 	@echo "  make validate  - proverava lokalne preduslove"
