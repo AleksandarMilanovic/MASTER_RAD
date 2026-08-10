@@ -129,3 +129,4 @@ security-platform/thehive-vendor/
 
 secrets/
 **/*api-key*
+*.phase7-backup
