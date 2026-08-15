@@ -12,6 +12,15 @@ thehive-integration:
 validate-thehive-integration:
 	./scripts/validate/validate-thehive-integration.sh
 
+.PHONY: monitoring-up
+monitoring-up:
+	./scripts/deploy/monitoring-up.sh
+
+
+.PHONY: monitoring-validate
+monitoring-validate:
+	./scripts/validate/validate-monitoring.sh
+
 help:
 	@echo "Dostupne komande:"
 	@echo "  make validate  - proverava lokalne preduslove"

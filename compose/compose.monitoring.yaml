@@ -1,2 +1,102 @@
-# Faza 5: Prometheus, Grafana, Alertmanager, cAdvisor i Portainer.
-services: {}
+services:
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: hcr-prometheus
+    restart: unless-stopped
+
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+    ports:
+      - "9090:9090"
+
+    networks:
+      - monitoring
+      - monitoring-access
+
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: hcr-node-exporter
+    restart: unless-stopped
+
+    command:
+      - "--path.rootfs=/host"
+
+    volumes:
+      - "/:/host:ro,rslave"
+
+    networks:
+      - monitoring
+
+
+  cadvisor:
+    image: ghcr.io/google/cadvisor:latest
+    container_name: hcr-cadvisor
+    restart: unless-stopped
+
+    privileged: true
+
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker:/var/lib/docker:ro"
+      - "/dev/disk:/dev/disk:ro"
+
+    networks:
+      - monitoring
+
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: hcr-grafana
+    restart: unless-stopped
+
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+    ports:
+      - "3000:3000"
+
+    networks:
+      - monitoring
+      - monitoring-access
+
+    depends_on:
+      - prometheus
+
+
+volumes:
+
+  prometheus_data:
+    name: hcr-prometheus-data
+
+  grafana_data:
+    name: hcr-grafana-data
+
+
+networks:
+
+  monitoring:
+    external: true
+    name: hcr-monitoring
+  monitoring-access:
+    external: true
+    name: hcr-monitoring-access

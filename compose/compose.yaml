@@ -90,3 +90,12 @@ networks:
       config:
         - subnet: ${ATTACKER_SUBNET:-10.10.60.0/24}
           gateway: ${ATTACKER_GATEWAY:-10.10.60.1}
+  
+  monitoring-access:
+    name: hcr-monitoring-access
+    driver: bridge
+    internal: false
+    ipam:
+      config:
+        - subnet: 10.10.80.0/24
+          gateway: 10.10.80.1

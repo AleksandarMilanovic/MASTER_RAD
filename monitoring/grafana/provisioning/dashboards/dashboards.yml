@@ -1,0 +1,15 @@
+apiVersion: 1
+
+providers:
+  - name: "HCR Dashboards"
+    orgId: 1
+    folder: "Hybrid Cyber Range"
+    type: file
+    disableDeletion: false
+    editable: true
+
+    options:
+      path: /var/lib/grafana/dashboards
+
+volumes:
+  - ../monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro

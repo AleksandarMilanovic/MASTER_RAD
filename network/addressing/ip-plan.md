@@ -32,6 +32,23 @@
 | `10.10.60.10` | Caldera |
 | `10.10.60.20` | Kali/Attack VM |
 
+Network: hcr-monitoring-access
+Subnet:  10.10.80.0/24
+Gateway: 10.10.80.1
+Type:    Docker bridge
+Internal: No
+
+Purpose:
+Provides controlled host access to monitoring front-end services.
+
+Connected services:
+- Prometheus
+- Grafana
+
+Not connected:
+- Node Exporter
+- cAdvisor
+
 ## Napomena
 
 Docker bridge mreže ne rešavaju same po sebi povezivanje sa virtuelnim mašinama.
