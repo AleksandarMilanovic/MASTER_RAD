@@ -2,6 +2,97 @@
 
 ## Master rad – Automatizovano Cyber Range okruženje za simulaciju napada, detekciju, odgovor i monitoring
 
+### Sadržaj:
+- [Opis projekta](#opis-projekta)
+- [1. Cilj projekta](#1-cilj-projekta)
+- [2. Krajnji rezultat](#2-krajnji-rezultat)
+- [3. Arhitektura sistema](#3-arhitektura-sistema)
+- [4. Komponente projekta](#4-komponente-projekta)
+  - [4.1 Wazuh](#41-wazuh)
+    - [Wazuh Manager](#wazuh-manager)
+    - [Wazuh Indexer](#wazuh-indexer)
+    - [Wazuh Dashboard](#wazuh-dashboard)
+  - [4.2 Sysmon](#42-sysmon)
+  - [4.3 MITRE CALDERA](#43-mitre-caldera)
+  - [4.4 TheHive](#44-thehive)
+  - [4.5 Wazuh–TheHive integracija](#45-wazuhthehive-integracija)
+  - [4.6 Enrichment Wazuh alertova](#46-enrichment-wazuh-alertova)
+  - [4.7 Prometheus](#47-prometheus)
+  - [4.8 Node Exporter](#48-node-exporter)
+  - [4.9 cAdvisor](#49-cadvisor)
+  - [4.10 Grafana](#410-grafana)
+- [5. Mrežna arhitektura](#5-mrežna-arhitektura)
+- [6. Struktura repozitorijuma](#6-struktura-repozitorijuma)
+- [7. Automatizacija](#7-automatizacija)
+- [8. Sistemski zahtevi](#8-sistemski-zahtevi)
+- [9. Preuzimanje projekta](#9-preuzimanje-projekta)
+- [10. Provera preduslova](#10-provera-preduslova)
+- [11. Inicijalizacija mrežne infrastrukture](#11-inicijalizacija-mrežne-infrastrukture)
+- [12. TheHive inicijalna konfiguracija](#12-thehive-inicijalna-konfiguracija)
+- [13. TheHive organizacija i servisni nalog](#13-thehive-organizacija-i-servisni-nalog)
+- [14. Wazuh–TheHive integration deployment](#14-wazuhthehive-integration-deployment)
+- [15. Pokretanje kompletnog okruženja](#15-pokretanje-kompletnog-okruženja)
+  - [Faza 1 – Provera preduslova](#faza-1--provera-preduslova)
+  - [Faza 2 – Mrežna infrastruktura](#faza-2--mrežna-infrastruktura)
+  - [Faza 3 – Wazuh](#faza-3--wazuh)
+  - [Faza 4 – TheHive](#faza-4--thehive)
+  - [Faza 5 – Integracija](#faza-5--integracija)
+  - [Faza 6 – CALDERA](#faza-6--caldera)
+  - [Faza 7 – Monitoring](#faza-7--monitoring)
+- [16. Pristup platformama](#16-pristup-platformama)
+- [17. Provera stanja okruženja](#17-provera-stanja-okruženja)
+- [18. Validacija kompletnog sistema](#18-validacija-kompletnog-sistema)
+- [19. Pojedinačna validacija](#19-pojedinačna-validacija)
+  - [Wazuh](#wazuh)
+  - [TheHive](#thehive)
+  - [Wazuh–TheHive](#wazuhthehive)
+  - [CALDERA](#caldera)
+  - [Monitoring](#monitoring)
+- [20. Pokretanje pojedinačnih komponenti](#20-pokretanje-pojedinačnih-komponenti)
+  - [Wazuh](#wazuh-1)
+  - [TheHive](#thehive-1)
+  - [CALDERA](#caldera-1)
+  - [Monitoring](#monitoring-1)
+- [21. Zaustavljanje okruženja](#21-zaustavljanje-okruženja)
+- [22. Windows target sistem](#22-windows-target-sistem)
+  - [Automatizovana priprema Windows target sistema](#automatizovana-priprema-windows-target-sistema)
+- [23. Wazuh Windows agent](#23-wazuh-windows-agent)
+- [24. CALDERA Sandcat agent](#24-caldera-sandcat-agent)
+- [25. Izvođenje CALDERA scenarija](#25-izvođenje-caldera-scenarija)
+- [26. Praćenje napada u Wazuh-u](#26-praćenje-napada-u-wazuh-u)
+- [27. Praćenje alertova u TheHive-u](#27-praćenje-alertova-u-thehive-u)
+- [28. Monitoring laboratorije](#28-monitoring-laboratorije)
+- [29. Troubleshooting](#29-troubleshooting)
+  - [Pregled kontejnera](#pregled-kontejnera)
+  - [Pregled resursa](#pregled-resursa)
+  - [Wazuh log](#wazuh-log)
+  - [Wazuh integracija](#wazuh-integracija)
+  - [TheHive log](#thehive-log)
+  - [CALDERA](#caldera-2)
+  - [Prometheus](#prometheus)
+  - [Grafana](#grafana)
+- [30. Korisne Make komande](#30-korisne-make-komande)
+- [31. Bezbednosne napomene](#31-bezbednosne-napomene)
+- [32. Reproduktivnost](#32-reproduktivnost)
+- [33. Validation filozofija](#33-validation-filozofija)
+- [34. Primer kompletnog eksperimenta](#34-primer-kompletnog-eksperimenta)
+  - [1. Deployment](#1-deployment)
+  - [2. Validation](#2-validation)
+  - [3. Endpoint validation](#3-endpoint-validation)
+  - [4. Attack simulation](#4-attack-simulation)
+  - [5. Detection](#5-detection)
+  - [6. Alert forwarding](#6-alert-forwarding)
+  - [7. Incident analysis](#7-incident-analysis)
+  - [8. Infrastructure monitoring](#8-infrastructure-monitoring)
+  - [9. Dokumentovanje rezultata](#9-dokumentovanje-rezultata)
+  - [10. Shutdown](#10-shutdown)
+- [35. Glavni doprinos projekta](#35-glavni-doprinos-projekta)
+- [36. Ograničenja](#36-ograničenja)
+- [37. Budući razvoj](#37-budući-razvoj)
+- [38. Zaključak](#38-zaključak)
+
+## Opis projekta
+
 Hybrid Cyber Range (HCR) predstavlja modularno, izolovano i automatizovano laboratorijsko okruženje namenjeno simulaciji realnih sajber napada i analizi kompletnog procesa od generisanja napada do njegove detekcije i obrade od strane Blue Team/SOC komponenti.
 
 Projekat je razvijen u okviru master rada sa ciljem izgradnje praktičnog Cyber Range okruženja zasnovanog pretežno na open-source tehnologijama, koje omogućava reprodukovanje scenarija iz oblasti ofanzivne i defanzivne sajber bezbednosti.
@@ -47,6 +138,8 @@ Na ovaj način laboratorija ne demonstrira samo pojedinačne bezbednosne alate, 
 ---
 
 # 1. Cilj projekta
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Osnovni cilj projekta je implementacija prenosivog i automatizovanog Cyber Range okruženja koje omogućava praktično testiranje različitih faza životnog ciklusa sajber incidenta.
 
@@ -149,6 +242,8 @@ Host + Docker containers
 
 # 3. Arhitektura sistema
 
+[↑ Nazad na sadržaj](#sadržaj)
+
 Hybrid Cyber Range koristi kombinaciju virtuelnih mašina i Docker kontejnera.
 
 Serverske bezbednosne komponente izvršavaju se na Ubuntu Server sistemu, dok target sistemi mogu biti realizovani kao virtuelne mašine ili kontejneri, u zavisnosti od njihove namene.
@@ -210,6 +305,8 @@ Osnovna arhitektura:
 # 4. Komponente projekta
 
 ## 4.1 Wazuh
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Wazuh predstavlja centralnu SIEM/XDR komponentu laboratorije.
 
@@ -276,6 +373,8 @@ Ovo je posebno značajno prilikom CALDERA testova jer omogućava da aktivnosti k
 ---
 
 # 4.3 MITRE CALDERA
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 MITRE CALDERA predstavlja adversary emulation komponentu projekta.
 
@@ -347,6 +446,8 @@ TheHive Alert
 ---
 
 # 4.5 Wazuh–TheHive integracija
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Jedan od ključnih implementacionih delova projekta je custom integracija između Wazuh i TheHive platformi.
 
@@ -448,6 +549,8 @@ Ovakav enrichment omogućava jednostavnije filtriranje i klasifikovanje alertova
 
 # 4.7 Prometheus
 
+[↑ Nazad na sadržaj](#sadržaj)
+
 Prometheus predstavlja centralni sistem za prikupljanje monitoring metrika.
 
 U projektu se koristi za praćenje infrastrukture Cyber Range okruženja.
@@ -525,6 +628,8 @@ Tipični podaci koji se mogu pratiti:
 ---
 
 # 5. Mrežna arhitektura
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Cyber Range koristi segmentiranu Docker mrežnu arhitekturu.
 
@@ -691,6 +796,8 @@ python3 --version
 
 # 9. Preuzimanje projekta
 
+[↑ Nazad na sadržaj](#sadržaj)
+
 Repozitorijum se klonira pomoću Git-a:
 
 ```bash
@@ -772,6 +879,8 @@ treba da prikaže HCR mreže.
 ---
 
 # 12. TheHive inicijalna konfiguracija
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 TheHive zahteva inicijalnu konfiguraciju pre prvog standardnog pokretanja.
 
@@ -869,6 +978,8 @@ make validate-thehive-integration
 ---
 
 # 15. Pokretanje kompletnog okruženja
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Nakon inicijalne konfiguracije, kompletan serverski deo laboratorije pokreće se jednom komandom:
 
@@ -973,6 +1084,8 @@ Nakon toga pokreće se finalna validacija kompletnog okruženja.
 ---
 
 # 16. Pristup platformama
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 U razvojnom deployment-u korišćena je adresa serverske VM:
 
@@ -1100,6 +1213,8 @@ Proverava Prometheus/Grafana monitoring stack.
 ---
 
 # 20. Pokretanje pojedinačnih komponenti
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Iako je preporučeni način:
 
@@ -1275,6 +1390,8 @@ VM pre početka eksperimenta predstavlja čist monitored endpoint.
 
 # 23. Wazuh Windows agent
 
+[↑ Nazad na sadržaj](#sadržaj)
+
 Windows target mora imati instaliran Wazuh Agent.
 
 Agent mora biti konfigurisan tako da komunicira sa Wazuh Manager-om.
@@ -1355,6 +1472,8 @@ Trusted
 ---
 
 # 26. Praćenje napada u Wazuh-u
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Nakon pokretanja CALDERA operation-a otvoriti Wazuh Dashboard.
 
@@ -1455,6 +1574,8 @@ Monitoring omogućava praćenje resursa tokom adversary emulation testova, što 
 ---
 
 # 29. Troubleshooting
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 ## Pregled kontejnera
 
@@ -1574,6 +1695,8 @@ ok
 ---
 
 # 30. Korisne Make komande
+
+[↑ Nazad na sadržaj](#sadržaj)
 
 Prikaz dostupnih komandi:
 
@@ -1721,6 +1844,8 @@ make down
 
 # 33. Validation filozofija
 
+[↑ Nazad na sadržaj](#sadržaj)
+
 Deployment se ne smatra uspešnim samo zato što Docker prikazuje container kao `running`.
 
 Validation sloj proverava stvarnu dostupnost ključnih funkcija.
@@ -1825,6 +1950,8 @@ make down
 
 # 35. Glavni doprinos projekta
 
+[↑ Nazad na sadržaj](#sadržaj)
+
 Hybrid Cyber Range demonstrira kako se više open-source bezbednosnih tehnologija može povezati u funkcionalan sistem za izvođenje sajber bezbednosnih eksperimenata.
 
 Ključni doprinos nije samo instalacija pojedinačnih alata, već njihova integracija u zajednički workflow:
@@ -1927,3 +2054,5 @@ make down
 ```
 
 Time je realizovano modularno, izolovano, ponovljivo i automatizovano Cyber Range okruženje pogodno za praktične eksperimente, SOC/Blue Team obuku i akademsko istraživanje u oblasti sajber bezbednosti.
+
+[↑ Nazad na sadržaj](#sadržaj)
