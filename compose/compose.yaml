@@ -1,10 +1,26 @@
 name: ${COMPOSE_PROJECT_NAME:-hybrid-cyber-range}
 
 services:
+  network-bootstrap:
+    image: alpine:3.22
+    container_name: hcr-network-bootstrap
+    profiles: ["bootstrap"]
+    command: ["/bin/true"]
+    restart: "no"
+
+    networks:
+      - management
+      - security
+      - monitoring
+      - corporate
+      - dmz
+      - attacker
+      - case-management
+      - monitoring-access
   network-probe:
     image: alpine:3.22
     container_name: hcr-network-probe
-    profiles: ["core"]
+    profiles: ["diagnostic"]
     command:
       - /bin/sh
       - -c
@@ -99,3 +115,12 @@ networks:
       config:
         - subnet: 10.10.80.0/24
           gateway: 10.10.80.1
+
+  case-management:
+    name: hcr-case-management
+    driver: bridge
+    internal: false
+    ipam:
+      config:
+        - subnet: ${CASE_MANAGEMENT_SUBNET:-10.10.70.0/24}
+          gateway: ${CASE_MANAGEMENT_GATEWAY:-10.10.70.1}

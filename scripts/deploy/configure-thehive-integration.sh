@@ -78,15 +78,12 @@ fi
 if ! docker network inspect \
     "$CASE_NETWORK" >/dev/null 2>&1
 then
-
-    echo "[INFO] Creating Docker network: $CASE_NETWORK"
-
-    docker network create \
-        --driver bridge \
-        --subnet 10.10.70.0/24 \
-        "$CASE_NETWORK"
-
+    echo "[FAIL] Required network does not exist: $CASE_NETWORK"
+    echo "[INFO] Run network deployment first."
+    exit 1
 fi
+
+echo "[OK] Required network exists: $CASE_NETWORK"
 
 
 #
